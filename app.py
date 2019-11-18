@@ -1,6 +1,13 @@
 from flask import Flask, render_template
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
+
+app.config['MONGO_DBNAME'] = 'bdat_airbnb'
+app.config["MONGO_URI"] = "mongodb://localhost:27017/bdat_airbnb"
+#app.config['MONGO_URI'] = 'mongodb://user:pass@host.domain.com:12345/mongodb_database'
+
+mongo = PyMongo(app)
 
 
 @app.errorhandler(401)
@@ -23,8 +30,13 @@ def FUN_405(error):
 
 @app.route('/')
 def airbnb_route():
+    users = mongo.db.usersessions
+    login_user = users.find_one({'name': "abi"})
     return render_template("index.html")
 
+@app.route('/charts.html')
+def airbnb_charts():
+    return render_template("charts.html")
 
 if __name__ == '__main__':
     app.run()
