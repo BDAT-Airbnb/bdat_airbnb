@@ -30,13 +30,19 @@ def FUN_405(error):
 
 @app.route('/')
 def airbnb_route():
-    users = mongo.db.usersessions
-    login_user = users.find_one({'name': "abi"})
+    return render_template("index.html")
+
+@app.route('/index.html')
+def airbnb_dashboard():
     return render_template("index.html")
 
 @app.route('/charts.html')
 def airbnb_charts():
     return render_template("charts.html")
+
+@app.route('/tables.html')
+def airbnb_tables():
+    return render_template("tables.html")
 
 if __name__ == '__main__':
     app.run()
