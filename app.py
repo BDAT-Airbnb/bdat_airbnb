@@ -1,7 +1,11 @@
-import flask_restful
-from flask import Flask, render_template
+import json
+
+from bson import json_util
+from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
-from flask_restful import reqparse, abort, Api, Resource
+from flask_restful import Api, Resource
+
+from utils.encoder import JSONEncoder
 
 app = Flask(__name__)
 api = Api(app)
@@ -50,7 +54,18 @@ def airbnb_tables():
 
 class Dataset(Resource):
     def get(self):
-        return {}
+        pageNum = int(request.args.get('pageNum'))
+        limit = int(request.args.get('limit'))
+        searchKeyword = request.args.get('searchKeyword')
+        if searchKeyword is None:
+            searchQuery = {}
+        else:
+            searchQuery = {"name": searchKeyword}
+
+        metrics = list(mongo.db.metrics.find().sort('name').skip((pageNum - 1) * limit).limit(limit))
+        totalRows = mongo.db.metrics.count()
+        response = {'totalRows': totalRows, 'numberOfRecords': len(metrics), 'metrics': metrics, 'limit': limit}
+        return json.dumps(response, default=json_util.default)
 
 
 ##
