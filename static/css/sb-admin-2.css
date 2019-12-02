@@ -2871,6 +2871,8 @@ input[type="button"].btn-block {
 
 .dropdown-toggle {
   white-space: nowrap;
+  right:0;
+  position: absolute;
 }
 
 .dropdown-toggle::after {

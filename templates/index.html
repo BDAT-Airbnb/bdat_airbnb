@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
-  <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="static/css/sb-admin-2.css" rel="stylesheet">
 
 </head>
 
@@ -76,10 +76,7 @@
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-            <!-- Sidebar Toggle (Topbar) -->
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
+
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -138,14 +135,22 @@
                           <!-- Bar Chart -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Top Neighbourhoods</h6>
+                    <div class="dropdown mb-4">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Dropdown
+                    </button>
+                    <div id="dropdown-list" class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a><li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </div>
+                  </div>
                 </div>
                 <div class="card-body">
                   <div class="chart-bar">
                     <canvas id="neighbourhood"></canvas>
                   </div>
-                  <hr>
-                  Styling for the bar chart can be found in the <code>/js/demo/chart-bar-demo.js</code> file.
                 </div>
               </div>
 
@@ -402,7 +407,7 @@
                 </div>
                 <div class="card-body">
                   <div class="text-center">
-                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/undraw_posting_photo.svg" alt="">
+                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="static/img/undraw_posting_photo.svg" alt="">
                   </div>
                   <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that you can use completely free and without attribution!</p>
                   <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>
@@ -478,7 +483,7 @@
 
   <!-- Custom scripts for all pages-->
   <script src="static/js/sb-admin-2.min.js"></script>
-  <script src="static/js/dashboard.js"></script>
+  <script src="static/js/index.js"></script>
 
   <!-- Page level plugins -->
   <script src="static/vendor/chart.js/Chart.min.js"></script>
