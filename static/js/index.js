@@ -1,43 +1,47 @@
 var room_type = "Private room";
-//document.getElementById("dropdownMenuButton").innerHTML = room_type;
 var ctx;
+var neighbourhood;
 
-api_call();
-function api_call() {
+api_call('GET', '/home?room_type=' + room_type);
+function api_call(method, endpoint) {
   var request = new XMLHttpRequest();
 
-  request.open('GET', '/barchart?room_type=' + room_type, true);
+  request.open(method, endpoint, true);
   request.onload = function() {
   // Begin accessing JSON data here
   var data = JSON.parse(this.response);
 
   if (request.status >= 200 && request.status < 400) {
       var json_response = JSON.parse(data.replace(/\\/g,''));
+      append_home_fields(json_response);
       append_barchart_data(json_response);
   } else {
     console.log('error', request.status)
   }
   };
-
   request.send();
 }
 
-var neighbourhood;
+function append_home_fields(json_data) {
+  document.getElementById("total_records").innerHTML = json_data['total_records'];
+  document.getElementById("total_hosts").innerHTML = json_data['total_hosts'];
+  document.getElementById("price_range").innerHTML = json_data['price_range'];
+}
+
+
 function append_barchart_data(json_data) {
   var room_types = json_data['room_types'];
-  var menu_items = "";
-  index=0;
   var dropdown = document.getElementById("dd");
   dropdown.innerHTML = '';
   for(var i = 0; i < room_types.length; i++) {
-    //menu_items+= '<a class="dropdown-item" href="#">' + room_types[i] +'</a>'
        var opt = document.createElement("option");
        opt.value= room_types[i];
+       if(room_type === room_types[i]) {
+         opt.selected = "selected";
+       }
        opt.innerHTML = room_types[i]; // whatever property it has
-        dropdown.appendChild(opt);
-       index++;
+       dropdown.appendChild(opt);
   }
-  //document.getElementById("dropdown").innerHTML = menu_items;
 
     // Bar Chart Example
 ctx = document.getElementById("neighbourhood");
@@ -126,58 +130,11 @@ neighbourhood = new Chart(ctx, {
 });
 }
 
-//$(function(){
-//  $(".dropdown-menu li a").click(function(){
-    //room_type = $(this).text();
-//    $(".btn:first-child").text($(this).text());
-//    $(".btn:first-child").val($(this).text());
-    //api_call();
-//  });
-//});
-
-// function dropdown_select() {
-//   console.log("Hey I got you!!!")
-// }
-//
-// $("dropdown-list").on("click", function() {
-//     //allOptions.removeClass('selected');
-//     //$(this).addClass('selected');
-//     //$("ul").children('.init').html($(this).html());
-//     //allOptions.toggle();
-//   console.log("Hey I got you!!!")
-// });
-//
-//   $('.dropdown-menu a').click(function(){
-//     $('#selected').text($(this).text());
-//   });
-
-  $(function(){
-
-    $(".dropdown-menu a").click(function(){
-      var selected = $(this).text();
-      $(".btn:first-child").text(selected);
-      $(".btn:first-child").val(selected);
-      room_type = selected;
-      api_call();
-   });
-
-});
-
 $( ".dropdown" ).change(function() {
   neighbourhood.destroy();
   var e = document.getElementById("dd");
-  var selected = e.options[e.selectedIndex].value;
-  console.log(selected);
-  room_type = selected;
-  api_call();
-	// chart.options.data[0].dataPoints = [];
-  // var e = document.getElementById("dd");
-	// var selected = e.options[e.selectedIndex].value;
-  // dps = jsonData[selected];
-  // for(var i in dps) {
-  //   chart.options.data[0].dataPoints.push({label: dps[i].label, y: dps[i].y});
-  // }
-  // chart.render();
+  room_type = e.options[e.selectedIndex].value;
+  api_call('GET', '/home?room_type=' + room_type);
 });
 
 
