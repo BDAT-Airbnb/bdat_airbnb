@@ -91,12 +91,19 @@ class BarChart(Resource):
         print(response)
         return json.dumps(response, default=json_util.default)
 
+class HomePage(Resource):
+    def get(self):
+        total_records = mongo.db.metrics.count()
+        total_hosts = mongo.db.metrics.distinct("host_id").length
+
+
 
 ##
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(Dataset, '/dataset')
 api.add_resource(BarChart, "/barchart")
+api.add_resource(HomePage, "/home")
 
 if __name__ == '__main__':
     app.run()

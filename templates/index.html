@@ -17,6 +17,7 @@
 
   <!-- Custom styles for this template-->
   <link href="static/css/sb-admin-2.css" rel="stylesheet">
+  <link href="static/css/index.css" rel="stylesheet">
 
 </head>
 
@@ -131,31 +132,6 @@
 {#            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>#}
 {#            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>#}
 {#          </div>#}
-
-                          <!-- Bar Chart -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Top Neighbourhoods</h6>
-                    <div class="dropdown mb-4">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Dropdown
-                    </button>
-                    <div id="dropdown-list" class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a><li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div class="chart-bar">
-                    <canvas id="neighbourhood"></canvas>
-                  </div>
-                </div>
-              </div>
-
-
-
           <!-- Content Row -->
           <div class="row">
 
@@ -165,8 +141,8 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Records</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="total_records"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -236,6 +212,35 @@
               </div>
             </div>
           </div>
+
+
+                        <!-- Bar Chart -->
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Top Neighbourhoods</h6>
+                    <select class="dropdown mb-4 animated--fade-in" id="dd" aria-haspopup="true" aria-expanded="false">
+{#                        <option value="" selected="selected">Select Serial Number</option>#}
+{#                        <option value="dps1">DataPoints 1</option>#}
+{#                        <option value="dps2">DataPoints 2</option>#}
+{#                        <option value="dps3">DataPoints 3</option>#}
+{#                        <option value="dps4">DataPoints 4</option>#}
+{#                        <option value="dps5">DataPoints 5</option>#}
+                    </select>
+
+{#                    <div class="dropdown mb-4" id="">#}
+{#                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#                      Dropdown#}
+{#                    </button>#}
+{#                        <div class="dropdown-menu animated--fade-in" id="dropdown-list"  aria-labelledby="dropdownMenuButton">#}
+{#                    </div>#}
+{#                  </div>#}
+                </div>
+                <div class="card-body">
+                  <div class="chart-bar">
+                    <canvas id="neighbourhood"></canvas>
+                  </div>
+                </div>
+              </div>
 
           <!-- Content Row -->
 
