@@ -1,19 +1,31 @@
 import csv
+import json
+
+import pandas as pd
 from pymongo import MongoClient
-#CSV to JSON Conversion
-csvFile = open('/home/abin/Georgian_BigData_Sem1/Dataprogramming-TUE-1/projects/new-york-city-airbnb-open-data/AB_NYC_2019.csv', 'r')
-reader = csv.DictReader(csvFile)
+
 # DB connectivity
 client = MongoClient('localhost', 27017)
 db = client.bdat_airbnb
 db.metrics.drop()
-header = ["id", "name", "host_id", "host_name", "neighbourhood_group", "neighbourhood", "latitude", "longitude"
-    , "room_type", "price", "minimum_nights", "number_of_reviews", "last_review", "reviews_per_month"
-    , "calculated_host_listings_count", "availability_365"]
 
-for each in reader:
-    row = {}
-    for field in header:
-        row[field] = each[field]
+#CSV to JSON Conversion
+df = pd.read_csv('/home/abin/Georgian_BigData_Sem1/Dataprogramming-TUE-1/projects/new-york-city-airbnb-open-data/AB_NYC_2019.csv',encoding = 'ISO-8859-1')
+records = json.loads(df.T.to_json()).values()
+db.metrics.insert(records)
 
-    db.metrics.insert(row)
+# csvFile = open('/home/abin/Georgian_BigData_Sem1/Dataprogramming-TUE-1/projects/new-york-city-airbnb-open-data/AB_NYC_2019.csv', 'r')
+# reader = csv.DictReader(csvFile)
+#
+# header = ["id", "name", "host_id", "host_name", "neighbourhood_group", "neighbourhood", "latitude", "longitude"
+#     , "room_type", "price", "minimum_nights", "number_of_reviews", "last_review", "reviews_per_month"
+#     , "calculated_host_listings_count", "availability_365"]
+#
+# for each in reader:
+#     row = {}
+#     for field in header:
+#         print(each[field])
+#
+#         row[field] = float(each[field])
+#
+#     db.metrics.insert(row)
