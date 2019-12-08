@@ -2,6 +2,7 @@ var room_type = "Private room";
 var ctx;
 var neighbourhood;
 
+
 api_call('GET', '/home?room_type=' + room_type);
 function api_call(method, endpoint) {
   var request = new XMLHttpRequest();
@@ -15,6 +16,7 @@ function api_call(method, endpoint) {
       var json_response = JSON.parse(data.replace(/\\/g,''));
       append_home_fields(json_response);
       append_barchart_data(json_response);
+      append_pie_chart(json_response["pie_chart_data"]);
   } else {
     console.log('error', request.status)
   }
@@ -128,6 +130,63 @@ neighbourhood = new Chart(ctx, {
     },
   }
 });
+}
+
+function append_pie_chart(pie_chart_data) {
+  // Pie Chart Example
+var ctx = document.getElementById("myPieChart");
+var chart_options = document.getElementById("pie_chart");
+chart_options.innerHTML = '';
+var pie_labels = pie_chart_data["labels"];
+  for(var i = 0; i < pie_labels.length; i++) {
+       var span = document.createElement("span");
+       span.className = "mr-2";
+       var opt = document.createElement("i");
+       if (i === 0) {
+         opt.className = "fas fa-circle pie-1";
+       } else if (i === 1) {
+         opt.className = "fas fa-circle pie-2";
+       } else {
+         opt.className = "fas fa-circle pie-3";
+       }
+       opt.value = pie_labels[i];
+       opt.innerHTML = pie_labels[i]; // whatever property it has
+    span.appendChild(opt);
+       chart_options.appendChild(span);
+  }
+
+var myPieChart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: pie_labels,
+    datasets: [{
+      labels: pie_labels,
+      data: pie_chart_data["data"],
+      backgroundColor: ['#1cc88a', '#4e73df', '#36b9cc'],
+      hoverBackgroundColor: ['#1cc88a', '#4e73df', '#36b9cc'],
+      hoverBorderColor: "rgba(234, 236, 244, 1)",
+    }],
+  },
+  options: {
+    maintainAspectRatio: false,
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      borderColor: '#dddfeb',
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      caretPadding: 10,
+
+    },
+    legend: {
+      display: false
+    },
+    cutoutPercentage: 80,
+  },
+});
+
 }
 
 $( ".dropdown" ).change(function() {

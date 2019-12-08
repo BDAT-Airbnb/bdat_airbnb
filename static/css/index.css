@@ -1,3 +1,15 @@
 select{
     float: right;
 }
+
+.pie-1 {
+  color: #1cc88a !important;
+}
+
+.pie-2 {
+  color: #4e73df !important;
+}
+
+.pie-3 {
+  color: #36b9cc !important;
+}

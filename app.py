@@ -77,7 +77,7 @@ class Dataset(Resource):
 def bar_chart(room_type):
     neighbourhood = list(mongo.db.metrics.aggregate([{"$match": {"room_type": room_type}}
                                                         , {"$group": {"_id": "$neighbourhood", "count": {"$sum": 1}}}
-                                                        ,{"$sort": {"count": -1}}, {"$limit": 10}]))
+                                                        , {"$sort": {"count": -1}}, {"$limit": 10}]))
     label = []
     data = []
     for item in neighbourhood:
@@ -91,6 +91,22 @@ def bar_chart(room_type):
     return response
 
 
+def get_pie_chart_data(total_records):
+    room_types = list(mongo.db.metrics.aggregate([{"$group": {"_id": "$room_type", "count": {"$sum": 1}}},
+                                                  {"$project": {
+                                                      "percentage": {"$multiply": [{"$divide": [100, total_records]},
+                                                                                   "$count"]}}}]))
+    labels = []
+    data = []
+    response = {}
+    for room_type in room_types:
+        labels.append(room_type["_id"])
+        data.append(round(room_type["percentage"]))
+
+        response.update({"labels": labels, "data": data})
+    return response
+
+
 class HomePage(Resource):
     def get(self):
         total_records = mongo.db.metrics.count()
@@ -99,14 +115,16 @@ class HomePage(Resource):
         max_price_cur = mongo.db.metrics.find().sort("price", DESCENDING).limit(1)
         min_price = ''
         max_price = ''
-        for i,min_price_doc in enumerate(min_price_cur):
+        for i, min_price_doc in enumerate(min_price_cur):
             min_price = str(min_price_doc["price"])
-        for i,max_price_doc in enumerate(max_price_cur):
+        for i, max_price_doc in enumerate(max_price_cur):
             max_price = str(max_price_doc["price"])
 
         response = {"total_records": total_records, "total_hosts": total_hosts
             , "price_range": min_price + " - " + max_price}
         response.update(bar_chart(request.args.get('room_type')))
+        pie_chart_data = get_pie_chart_data(total_records)
+        response.update({"pie_chart_data": pie_chart_data})
         print(response)
         return json.dumps(response, default=json_util.default)
 
