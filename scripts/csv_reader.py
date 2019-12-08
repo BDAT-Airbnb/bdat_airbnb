@@ -10,7 +10,9 @@ db = client.bdat_airbnb
 db.metrics.drop()
 
 #CSV to JSON Conversion
-df = pd.read_csv('/home/abin/Georgian_BigData_Sem1/Dataprogramming-TUE-1/projects/new-york-city-airbnb-open-data/AB_NYC_2019.csv',encoding = 'ISO-8859-1')
+#file_path = '/home/abin/Georgian_BigData_Sem1/Dataprogramming-TUE-1/projects/new-york-city-airbnb-open-data/AB_NYC_2019.csv'
+file_path = '/home/ubuntu/AB_NYC_2019.csv'
+df = pd.read_csv(file_path,encoding = 'ISO-8859-1')
 records = json.loads(df.T.to_json()).values()
 db.metrics.insert(records)
 
