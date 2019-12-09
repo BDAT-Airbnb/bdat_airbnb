@@ -1,9 +1,12 @@
 var room_type = "Private room";
 var ctx;
 var neighbourhood;
+var pie_loaded = false;
 
 
 api_call('GET', '/home?room_type=' + room_type);
+api_call('GET', '/word-cloud');
+
 function api_call(method, endpoint) {
   var request = new XMLHttpRequest();
 
@@ -14,14 +17,35 @@ function api_call(method, endpoint) {
 
   if (request.status >= 200 && request.status < 400) {
       var json_response = JSON.parse(data.replace(/\\/g,''));
-      append_home_fields(json_response);
-      append_barchart_data(json_response);
-      append_pie_chart(json_response["pie_chart_data"]);
+      if (endpoint === "/word-cloud") {
+        append_word_cloud(json_response);
+      } else {
+        append_home_fields(json_response);
+        append_barchart_data(json_response);
+        if (!pie_loaded) {
+          append_pie_chart(json_response["pie_chart_data"]);
+        }
+      }
   } else {
     console.log('error', request.status)
   }
   };
   request.send();
+}
+
+function append_word_cloud(json_response) {
+  var chart = anychart.tagCloud(json_response);
+  // chart.title('15 most spoken languages');
+  // set an array of angles at which the words will be laid out
+  chart.angles([0]);
+  // enable a color range
+  chart.colorRange(true);
+  // set the color range length
+  chart.colorRange().length('80%');
+
+  // display the word cloud chart
+  chart.container("word-cloud");
+  chart.draw();
 }
 
 function append_home_fields(json_data) {
@@ -186,7 +210,7 @@ var myPieChart = new Chart(ctx, {
     cutoutPercentage: 80,
   },
 });
-
+pie_loaded = true;
 }
 
 $( ".dropdown" ).change(function() {

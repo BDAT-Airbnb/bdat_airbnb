@@ -11,7 +11,6 @@ from utils.encoder import JSONEncoder
 app = Flask(__name__)
 api = Api(app)
 
-
 app.config['MONGO_DBNAME'] = 'bdat_airbnb'
 app.config["MONGO_URI"] = "mongodb://localhost:27017/bdat_airbnb"
 # app.config['MONGO_URI'] = 'mongodb://user:pass@host.domain.com:12345/mongodb_database'
@@ -130,11 +129,20 @@ class HomePage(Resource):
         return json.dumps(response, default=json_util.default)
 
 
+class WordCloud(Resource):
+    def get(self):
+        word_cloud = list(mongo.db.metrics.aggregate([{"$group": {"_id": "$neighbourhood", "value": {"$sum": 1}
+            , "category": {"$first": "$neighbourhood_group"}}}, {"$project": {"x": "$_id"
+            , "value": "$value", "category": "$category", "_id": False}}]))
+        return json.dumps(word_cloud, default=json_util.default)
+
+
 ##
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(Dataset, '/dataset')
 api.add_resource(HomePage, "/home")
+api.add_resource(WordCloud, "/word-cloud")
 
 if __name__ == '__main__':
     app.run(port=8002)

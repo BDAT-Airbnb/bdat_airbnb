@@ -13,3 +13,7 @@ select{
 .pie-3 {
   color: #36b9cc !important;
 }
+
+.word-cloud {
+    margin-left: 10px;
+}
