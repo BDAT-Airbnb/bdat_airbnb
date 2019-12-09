@@ -11,6 +11,7 @@ from utils.encoder import JSONEncoder
 app = Flask(__name__)
 api = Api(app)
 
+
 app.config['MONGO_DBNAME'] = 'bdat_airbnb'
 app.config["MONGO_URI"] = "mongodb://localhost:27017/bdat_airbnb"
 # app.config['MONGO_URI'] = 'mongodb://user:pass@host.domain.com:12345/mongodb_database'
@@ -136,4 +137,5 @@ api.add_resource(Dataset, '/dataset')
 api.add_resource(HomePage, "/home")
 
 if __name__ == '__main__':
+    app.run(port=8002)
     app.run()
