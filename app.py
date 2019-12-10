@@ -137,12 +137,62 @@ class WordCloud(Resource):
         return json.dumps(word_cloud, default=json_util.default)
 
 
+class AreaChart(Resource):
+    def get(self):
+        price_ranges = list(mongo.db.metrics.aggregate([{
+            "$project": {
+                "range": {
+                    "$concat": [
+                        {"$cond": [{"$lte": ["$price", 0]}, "Free Rentals", ""]},
+                        {"$cond": [{"$and": [{"$gt": ["$price", 0]}, {"$lt": ["$price", 200]}]}, "Under 200", ""]},
+                        {"$cond": [{"$and": [{"$gte": ["$price", 200]}, {"$lt": ["$price", 400]}]}, "200 - 400", ""]},
+                        {"$cond": [{"$and": [{"$gte": ["$price", 400]}, {"$lt": ["$price", 600]}]}, "400 - 600", ""]},
+                        {"$cond": [{"$and": [{"$gte": ["$price", 600]}, {"$lt": ["$price", 800]}]}, "600 - 800", ""]},
+                        {"$cond": [{"$and": [{"$gte": ["$price", 800]}, {"$lt": ["$price", 1000]}]}, "800 - 1000", ""]},
+                        {"$cond": [{"$gte": ["$price", 1000]}, "Over 1000", ""]}
+                    ]
+                }
+            }
+        }, {"$group": {"_id": "$range", "count": {"$sum": 1}}}]))
+
+        price_labels = [0] * 7
+        price_range_count = [0] * 7
+        for price_range in price_ranges:
+            label = price_range["_id"]
+            if label == "Free Rentals":
+                price_labels[0] = label
+                price_range_count[0] = price_range["count"]
+            elif(label == "Under 200"):
+                price_labels[1] = label
+                price_range_count[1] = price_range["count"]
+            elif (label == "200 - 400"):
+                price_labels[2] = label
+                price_range_count[2] = price_range["count"]
+            elif (label == "400 - 600"):
+                price_labels[3] = label
+                price_range_count[3] = price_range["count"]
+            elif (label == "600 - 800"):
+                price_labels[4] = label
+                price_range_count[4] = price_range["count"]
+            elif (label == "800 - 1000"):
+                price_labels[5] = label
+                price_range_count[5] = price_range["count"]
+            elif (label == "Over 1000"):
+                price_labels[6] = label
+                price_range_count[6] = price_range["count"]
+        response = {"labels": price_labels, "data": price_range_count}
+        print(response)
+        return json.dumps(response, default=json_util.default)
+
+
 ##
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(Dataset, '/dataset')
 api.add_resource(HomePage, "/home")
 api.add_resource(WordCloud, "/word-cloud")
+
+api.add_resource(AreaChart, "/area_chart")
 
 if __name__ == '__main__':
     app.run(port=8002)
